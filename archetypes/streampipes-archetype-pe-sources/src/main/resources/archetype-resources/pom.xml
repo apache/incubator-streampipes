@@ -77,7 +77,7 @@
         <repository>
             <id>laus</id>
             <name>nexus repository</name>
-            <url>http://laus.fzi.de/nexus/content/repositories/public/</url>
+            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
