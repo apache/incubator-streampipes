@@ -39,13 +39,10 @@
                             (click)="labelingMode.setBrushMode()" [style.background-color]="labelingMode.isBrushMode() ? 'lightgrey' : 'white'"> <mat-icon>blur_circular</mat-icon></button>
                     <mat-slider [min]="1"  [max]="50" [step]="1" [thumbLabel]="true" [(ngModel)]="brushSize"></mat-slider>
                     <button mat-button (click)="save()" style="position: absolute; right: 0px;"> <mat-icon>save</mat-icon></button>
-                    <button mat-button matTooltip="Description" [matMenuTriggerFor]="aboveMenu">
+                    <button mat-button (click)="showImageDescription()" matTooltip="Description">
                             <span class="material-icons">
                         info
                     </span></button>
-                        <mat-menu #aboveMenu="matMenu" yPosition="above">
-                                <p><em>{{imageDescription}}</em></p>
-                        </mat-menu>
                     
                 </div>
 

@@ -25,6 +25,10 @@
                 <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens</mat-icon>
                 <p *ngIf="isDataSetDescription">Data Set</p>
                 <p *ngIf="isDataStreamDescription">Data Stream</p>
+                <md-button (click)="showAdapterDescription(adapter)" mat-button matTooltip="Description">
+                    <span class="material-icons">
+                info
+            </span></md-button>
             </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
@@ -62,7 +66,14 @@
                 </i>
                 <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
             </button>
-
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" class="delete">
+            <button matTooltip="Delete Adapter Template" color="primary" mat-fab (click)="openAdapterDocumentation(adapter); $event.stopPropagation()" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    delete
+                </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
+            </button>
         </div>
         <!--<div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">-->
             <!--<button color="primary" mat-fab>-->

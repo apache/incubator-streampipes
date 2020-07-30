@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
+import { DataSource } from '@angular/cdk/table';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -24,7 +24,6 @@ import { EventProperty } from '../../../../connect/schema-editor/model/EventProp
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-
 @Component({
   selector: 'sp-data-explorer-table-widget',
   templateUrl: './table-widget.component.html',
@@ -32,13 +31,13 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
 
-
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   availableColumns: EventProperty[];
   selectedColumns: EventProperty[];
   columnNames: string[];
-
+  oldFunction: any;
+  oldData : any
   dataSource = new MatTableDataSource();
 
   constructor(protected dataLakeRestService: DatalakeRestService, protected dialog: MatDialog) {
@@ -46,6 +45,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
   }
 
   ngOnInit(): void {
+    this.oldFunction = this.dataSource.filterPredicate
     this.dataSource.sort = this.sort;
     this.availableColumns = [this.getTimestampProperty(this.dataExplorerWidget.dataLakeMeasure.eventSchema)];
     this.availableColumns = this.availableColumns.concat(this.getValuePropertyKeys(this.dataExplorerWidget.dataLakeMeasure.eventSchema));
@@ -55,7 +55,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     this.columnNames = this.getRuntimeNames(this.selectedColumns);
 
     this.updateData();
-
+    
   }
 
   updateData() {
@@ -69,6 +69,40 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
       }
     );
   }
+  tableFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  sortColumn(event){
+    if(event.direction == "asc"){
+      this.dataSource.data = this.dataSource.data.sort((a,b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0)); 
+      return
+    }
+    if(event.direction == "desc"){
+      this.dataSource.data = this.dataSource.data.sort((a,b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0)); 
+      return
+    }
+    if(event.direction == ""){
+      this.dataSource.data = this.dataSource.data.sort((a,b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0)); 
+      return
+    }
+  }
+  setupFilter(column: string) {
+    if(column == ''){
+      this.dataSource.filterPredicate = this.oldFunction
+    }
+    else{
+    this.dataSource.filterPredicate = (d: unknown, filter: string) => {
+      const textToSearch = String(d[column]) && String(d[column]).toLowerCase()|| '';
+      return textToSearch.indexOf(filter) !== -1;
+      };
+    }
+  }
+
+  comlumnFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  
 
   transformData(data: DataResult) {
     const result = [];

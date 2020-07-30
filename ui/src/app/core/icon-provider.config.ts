@@ -39,6 +39,7 @@ export default function iconProviderConfig($mdIconProvider, apiConstants) {
 		.iconSet('social', 'assets/img/svg/svg-sprite-social.svg', 24)
 		.iconSet('toggle', 'assets/img/svg/svg-sprite-toggle.svg', 24)
 		.iconSet('avatars', 'assets/img/svg/avatar-icons.svg', 24)
+		.iconSet('filter_alt', 'assets/img/svg/filter_alt.svg', 24)
 		.defaultIconSet('assets/img/svg/svg-sprite-action.svg', 24);
 };
 

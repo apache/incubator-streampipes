@@ -20,14 +20,22 @@
 
 <div fxLayout="column" fxLayoutAlign="stretch">
     <div class="assemblyOptionsDataExplorer sp-blue-bg m-0 row header h-40" style="margin-left: 0px;margin-right: 0px;">
-        <div fxFlex="100" layout="row" fxLayoutAlign="end center" style="margin-left: 0px;margin-right: 0px;">
-            <sp-select-properties (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
-            <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
-                <i class="material-icons">get_app</i>
-            </button>
-            <button mat-button mat-icon-button color="white" (click)="removeWidget()">
-                <i class="material-icons">clear</i>
-            </button>
+        <div fxFlex="100" layout="row"  style="margin-left: 0px;margin-right: 0px;">
+          <mat-form-field>
+            <label>Filter</label>
+            <br/>
+            <br/>
+            <input matInput (keyup)="tableFilter($event)" (focus)="setupFilter('')">
+          </mat-form-field>
+          <button style="float: right;" mat-button mat-icon-button color="white" (click)="removeWidget()">
+            <i class="material-icons">clear</i>
+        </button>
+          <button style="float: right;" mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()" color="white">
+            <i class="material-icons">get_app</i>
+        </button>
+          <sp-select-properties style="float: right;" (changeSelectedProperties)="setSelectedColumn($event)" [availableProperties]="availableColumns" [selectedProperties]="selectedColumns"></sp-select-properties>
+            
+            
         </div>
     </div>
 
@@ -36,20 +44,60 @@
         <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
 
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
-
-        <table *ngIf="showData" mat-table [dataSource]="dataSource" matSort >
+        
+        <table *ngIf="showData" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortColumn($event)">
             <ng-container *ngFor="let element of this.selectedColumns" [cdkColumnDef]="element.runtimeName">
 
                 <div *ngIf="!isTimestamp(element)">
-                    <!--                <td *ngIf="isTimestamp(property)">{{runtimeData[property.properties.runtimeName] | date:'yyyy-MM-dd HH:mm:ss '}}</td>-->
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header><label style="font-size: large">{{element.runtimeName}}</label></th>
-                    <td mat-cell *matCellDef="let row"style="text-align: center;">{{row[element.runtimeName]}}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <div class="header">
+                            {{element.runtimeName}}
+                          <button mat-button class="btn-toggle" [matMenuTriggerFor]="menu">
+                            <mat-icon>filter_list</mat-icon>
+                          </button>
+                        </div>
+                        <mat-menu #menu>
+                          <div mat-menu-item   [disableRipple]="true" class="menu-title">
+                            {{element.runtimeName}}
+                          </div>
+                          
+                          <div mat-menu-item [disableRipple]="true">
+                              <mat-form-field>
+                                <input matInput placeholder="Value" (keyup)="comlumnFilter($event.target.value)" (focus)="setupFilter(element.runtimeName)">
+                              </mat-form-field>
+                          </div>
 
+                        </mat-menu>
+                      </th>
+                      <td mat-cell *matCellDef="let row"style="text-align: center;">{{row[element.runtimeName]}}</td>
                 </div>
-                <div *ngIf="isTimestamp(element)">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header><label style="font-size: large">{{element.runtimeName}}</label></th>
-                    <td mat-cell  *matCellDef="let row"style="text-align: left;">{{row[element.runtimeName]| date:'yyyy-MM-dd HH:mm:ss'}}</td>
 
+
+
+
+
+                <div *ngIf="isTimestamp(element)">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <div class="header">
+                            {{element.runtimeName}}
+                          <button mat-button class="btn-toggle" [matMenuTriggerFor]="menu">
+                            <mat-icon>filter_list</mat-icon>
+                          </button>
+                        </div>
+                        <mat-menu #menu>
+                          <div mat-menu-item   [disableRipple]="true" class="menu-title">
+                            {{element.runtimeName}}
+                          </div>
+                          
+                          <div mat-menu-item   [disableRipple]="true">
+                            <mat-form-field>
+                              <input matInput placeholder="Value" (keyup)="comlumnFilter($event.target.value)" (focus)="setupFilter(element.runtimeName)">
+                            </mat-form-field>
+                          </div>
+                
+                        </mat-menu>
+                      </th>
+                      <td mat-cell  *matCellDef="let row"style="text-align: left;">{{row[element.runtimeName]| date:'yyyy-MM-dd HH:mm:ss'}}</td>
                 </div>
             </ng-container>
 

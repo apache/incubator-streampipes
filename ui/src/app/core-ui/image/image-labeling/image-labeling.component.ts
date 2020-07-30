@@ -32,7 +32,8 @@ import { CocoFormatService } from '../services/CocoFormat.service';
 import { LabelingModeService } from '../services/LabelingMode.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-
+import {MatDialog} from '@angular/material/dialog';
+import {ImageLabelingDescriptionDialogComponent} from './image-labeling-description/image-labeling-description-dialog.component'
 @Component({
   selector: 'sp-image-labeling',
   templateUrl: './image-labeling.component.html',
@@ -47,7 +48,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
   // images
   public imagesSrcs = [];
   public imagesIndex: number;
-  imageDescription: string;
+  imageDescription: String;
 
   public cocoFiles: CocoFormat[] = [];
 
@@ -70,7 +71,7 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
 
 
 
-  constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
+  constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,public dialog: MatDialog,
               private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
               private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService,
               private tsonLdSerializerService: TsonLdSerializerService,
@@ -102,6 +103,14 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
         }
       );
     }
+  }
+  showImageDescription(){
+    const dialogRef = this.dialog.open(ImageLabelingDescriptionDialogComponent, {
+      width: '70%',
+      height: '500px',
+      panelClass: 'custom-dialog-container',
+      data : this.imageDescription
+  });
   }
 
   ngOnChanges() {
@@ -375,5 +384,5 @@ export class ImageLabelingComponent implements OnInit, AfterViewInit, OnChanges 
     });
   }
 
-
+  
 }
