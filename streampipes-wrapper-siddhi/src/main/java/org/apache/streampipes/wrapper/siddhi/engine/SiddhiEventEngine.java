@@ -129,7 +129,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   private String removeStreamIdFromTimestamp(String timestampField) {
-    return timestampField !=null ? timestampField.replaceAll("s0::", "") : null;
+    return timestampField !=null ? timestampField.replaceAll("s.::", "") : null;
   }
 
   private String getOutputTopicName(B parameters) {
@@ -291,6 +291,26 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
         selectString.append("s0" + outputEventKeys.get(i) + ",");
       }
       selectString.append("s0" + outputEventKeys.get(outputEventKeys.size() - 1));
+    }
+    return selectString.toString();
+  }
+
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation, int streamNumber) {
+    return getCustomOutputSelectStatement(invocation, null, streamNumber);
+  }
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
+                                                  String eventName,
+                                                  int streamNumber) {
+    StringBuilder selectString = new StringBuilder();
+    selectString.append("select ");
+    String prefix = (eventName == null) ? "s" + streamNumber : eventName + ".s" + streamNumber;
+
+    if (outputEventKeys.size() > 0) {
+      for (int i = 0; i < outputEventKeys.size() - 1; i++) {
+        selectString.append(prefix + outputEventKeys.get(i) + ",");
+      }
+      selectString.append(prefix + outputEventKeys.get(outputEventKeys.size() - 1));
+
     }
     return selectString.toString();
   }
