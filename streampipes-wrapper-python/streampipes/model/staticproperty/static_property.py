@@ -17,17 +17,14 @@
 import sys, os
 sys.path.append(os.path.abspath("streampipes-wrapper-python"))
 
-from streampipes.model.base.unnamed_streampipes_entity import UnnamedStreamPipesEntity 
 
-class StaticProperty(UnnamedStreamPipesEntity):
+class StaticProperty(type):
   __serialVersionUID = 2509153122084646025
-  
-  
-  def __init__(self):
-      self.__set_StaticPropertyType(staticPropertyType)
+  __type = ""
 
-  def get_StaticPropertyType(self):
-    return staticPropertyType
+  def _get_static_property_type(self):
+    return self.__type
 
-  def __set_StaticPropertyType(self, staticPropertyType):
-    self.staticPropertyType = staticPropertyType
+  def _set_static_property_type(self, type):
+    self.__type == type
+  type = property(_get_static_property_type, _set_static_property_type)

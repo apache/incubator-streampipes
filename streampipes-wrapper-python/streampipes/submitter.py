@@ -49,3 +49,4 @@ class StandaloneModelSubmitter(object):
         DeclarerSingleton().port = config.port
         # start api
         PipelineElementApi().run(port=config.port)
+

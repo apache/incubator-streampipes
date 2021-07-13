@@ -16,10 +16,12 @@
 #
 import sys, os
 sys.path.append(os.path.abspath("streampipes-wrapper-python"))
+from streampipes.model.base.unnamed_streampipes_entity import UnnamedStreamPipesEntity 
+from streampipes.model.staticproperty.static_property import StaticProperty
 
-import streampipes.model.staticproperty.static_property 
-
-class FreeTextStaticProperty(StaticProperty):
+class FreeTextStaticProperty(UnnamedStreamPipesEntity):
   __serialVersionUID = 1
+  __metaclass__ = StaticProperty
+  
   def __init__(self):
     pass
